@@ -1,0 +1,16 @@
+{
+  "name": "battleship",
+  "private": true,
+  "version": "0.0.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "test": "vitest"
+  },
+  "devDependencies": {
+    "typescript": "^4.5.4",
+    "vite": "^2.9.9",
+    "vitest": "^0.12.6"
+  }
+}
