@@ -18,6 +18,7 @@ export class Gameboard {
   private readonly _hitShots: Array<StringifiedCoordinate> = [];
   private readonly placedShips: Map<StringifiedCoordinate, ShipWithSection> =
     new Map();
+  private readonly ships: Array<Ship> = [];
 
   constructor(size: number = 10) {
     if (size < 1) {
@@ -30,7 +31,7 @@ export class Gameboard {
   placeShip(ship: Ship, coordinate: Coordinate) {
     const { y, x } = coordinate;
     const size = this.gameboard.length;
-    if (x + ship.length > size || y + ship.length > size) {
+    if (x + ship.length > size || y > size) {
       throw new Error("The ship is placed outside the gameboard!");
     }
 
@@ -47,6 +48,7 @@ export class Gameboard {
         shipSection: i,
       });
     }
+    this.ships.push(ship);
   }
 
   receiveAttack(coordinate: Coordinate): void {
@@ -68,5 +70,9 @@ export class Gameboard {
     } else {
       this._missedShots.push(stringifiedCoordinates);
     }
+  }
+
+  allShipsSunk(): boolean {
+    return this.ships.every((ship) => ship.isSunk());
   }
 }

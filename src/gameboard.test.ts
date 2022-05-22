@@ -98,4 +98,29 @@ describe("Gameboard", () => {
       gameboard.placeShip(ship2, { x: 1, y: 1 });
     }).toThrow("The ship can't be placed over each other!");
   });
+
+  it("should tell me if all ships are sunk", () => {
+    const ship = new Ship(2);
+    const gameboard = new Gameboard(3);
+    gameboard.placeShip(ship, { x: 1, y: 1 });
+    gameboard.receiveAttack({ x: 1, y: 1 });
+    gameboard.receiveAttack({ x: 2, y: 1 });
+
+    expect(gameboard.allShipsSunk()).toBeTruthy();
+  });
+
+  it("should tell me if all ships are sunk", () => {
+    const gameboard = new Gameboard(3);
+    const ship1 = new Ship(2);
+    gameboard.placeShip(ship1, { x: 1, y: 1 });
+    const ship2 = new Ship(2);
+    gameboard.placeShip(ship2, { x: 0, y: 2 });
+
+    gameboard.receiveAttack({ x: 1, y: 1 });
+    gameboard.receiveAttack({ x: 2, y: 1 });
+    gameboard.receiveAttack({ x: 0, y: 2 });
+    gameboard.receiveAttack({ x: 1, y: 2 });
+
+    expect(gameboard.allShipsSunk()).toBeTruthy();
+  });
 });
