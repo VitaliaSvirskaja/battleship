@@ -18,6 +18,21 @@ describe("Gameboard", () => {
     expect(ship.isSunk()).toBeTruthy();
   });
 
+  it("should place a ship vertically", () => {
+    const ship = new Ship(2);
+    const gameboard = new Gameboard(3);
+    gameboard.shipIsHorizontal = false;
+    gameboard.placeShip(ship, { x: 1, y: 1 });
+
+    gameboard.receiveAttack({ x: 1, y: 1 });
+    gameboard.receiveAttack({ x: 1, y: 2 });
+
+    expect(gameboard.hitShots[0]).toMatchObject({ x: 1, y: 1 });
+    expect(gameboard.hitShots[1]).toMatchObject({ x: 1, y: 2 });
+    expect(gameboard.hitShots.length).toBe(2);
+    expect(ship.isSunk()).toBeTruthy();
+  });
+
   it("should place a ship with a length of two at given coordinates", () => {
     const ship = new Ship(2);
     const gameboard = new Gameboard(3);
@@ -95,6 +110,19 @@ describe("Gameboard", () => {
 
     expect(() => {
       gameboard.placeShip(ship1, { x: 2, y: 1 });
+      gameboard.placeShip(ship2, { x: 1, y: 1 });
+    }).toThrow("The ship can't be placed over each other!");
+  });
+
+  it("should throw an error if the a vertically and a horizontally placed ship would overlap", () => {
+    const ship1 = new Ship(2);
+    const ship2 = new Ship(2);
+    const gameboard = new Gameboard(3);
+
+    expect(() => {
+      gameboard.shipIsHorizontal = true;
+      gameboard.placeShip(ship1, { x: 1, y: 1 });
+      gameboard.shipIsHorizontal = false;
       gameboard.placeShip(ship2, { x: 1, y: 1 });
     }).toThrow("The ship can't be placed over each other!");
   });

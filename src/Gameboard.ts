@@ -12,13 +12,13 @@ export class Gameboard {
     return this._hitShots.map((c) => JSON.parse(c));
   }
 
-  // TODO  Erstellung der Axen mit Buchstaben und Ziffern
   private readonly gameboard: Array<Array<any>>;
   private readonly _missedShots: Array<StringifiedCoordinate> = [];
   private readonly _hitShots: Array<StringifiedCoordinate> = [];
-  private readonly placedShips: Map<StringifiedCoordinate, ShipWithSection> =
+  public readonly placedShips: Map<StringifiedCoordinate, ShipWithSection> =
     new Map();
   private readonly ships: Array<Ship> = [];
+  public shipIsHorizontal: boolean = true;
 
   constructor(size: number = 10) {
     if (size < 1) {
@@ -34,11 +34,11 @@ export class Gameboard {
     if (x + ship.length > size || y > size) {
       throw new Error("The ship is placed outside the gameboard!");
     }
-
     for (let i = 0; i < ship.length; i++) {
       const newCoordinate: Coordinate = {
-        x: coordinate.x + i,
-        y: coordinate.y,
+        ...coordinate,
+        [this.shipIsHorizontal ? "x" : "y"]:
+          (this.shipIsHorizontal ? x : y) + i,
       };
       if (this.placedShips.has(JSON.stringify(newCoordinate))) {
         throw new Error("The ship can't be placed over each other!");
