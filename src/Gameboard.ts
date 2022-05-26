@@ -1,5 +1,6 @@
 import { Ship } from "./Ship";
 import { Coordinate } from "./Coordinate";
+import { AttackResponse } from "./AttackResponse";
 
 type ShipWithSection = { ship: Ship; shipSection: number };
 type StringifiedCoordinate = string;
@@ -15,7 +16,7 @@ export class Gameboard {
   private readonly gameboard: Array<Array<any>>;
   private readonly _missedShots: Array<StringifiedCoordinate> = [];
   private readonly _hitShots: Array<StringifiedCoordinate> = [];
-  public readonly placedShips: Map<StringifiedCoordinate, ShipWithSection> =
+  private readonly placedShips: Map<StringifiedCoordinate, ShipWithSection> =
     new Map();
   private readonly ships: Array<Ship> = [];
   public shipIsHorizontal: boolean = true;
@@ -51,7 +52,7 @@ export class Gameboard {
     this.ships.push(ship);
   }
 
-  receiveAttack(coordinate: Coordinate): void {
+  receiveAttack(coordinate: Coordinate): AttackResponse {
     const { y, x } = coordinate;
     const size = this.gameboard.length;
     if (x >= size || y >= size || x < 0 || y < 0) {
@@ -65,10 +66,15 @@ export class Gameboard {
         throw new Error("There is no ship at this coordinate!");
       }
       shipAtCoordinate.ship.hit(shipAtCoordinate.shipSection);
+      if (shipAtCoordinate.ship.isSunk()) {
+        return AttackResponse.Sunk;
+      }
+      return AttackResponse.Hit;
     } else if (this._missedShots.includes(stringifiedCoordinates)) {
       throw new Error("You already missed this field!");
     } else {
       this._missedShots.push(stringifiedCoordinates);
+      return AttackResponse.Miss;
     }
   }
 
