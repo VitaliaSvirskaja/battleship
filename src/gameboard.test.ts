@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { Ship } from "./Ship";
 import { Gameboard } from "./Gameboard";
+import { AttackResponse } from "./AttackResponse";
 
 describe("Gameboard", () => {
   it("should place a ship at given coordinates", () => {
@@ -150,5 +151,14 @@ describe("Gameboard", () => {
     gameboard.receiveAttack({ x: 1, y: 2 });
 
     expect(gameboard.allShipsSunk()).toBeTruthy();
+  });
+
+  it("should respond correctly to attacks", () => {
+    const gameboard = new Gameboard(3);
+    const ship1 = new Ship(2);
+    gameboard.placeShip(ship1, { x: 1, y: 1 });
+    expect(gameboard.receiveAttack({ x: 0, y: 0 })).toBe(AttackResponse.Miss);
+    expect(gameboard.receiveAttack({ x: 1, y: 1 })).toBe(AttackResponse.Hit);
+    expect(gameboard.receiveAttack({ x: 2, y: 1 })).toBe(AttackResponse.Sunk);
   });
 });
