@@ -32,6 +32,10 @@ main {
 }
 .element {
   border: 0.3px solid black;
+  display:flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
 }
 
 h2,p {
